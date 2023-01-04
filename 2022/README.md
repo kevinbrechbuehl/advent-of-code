@@ -7,3 +7,9 @@ You can run a puzzle by executing the following command in the specific folder:
 ```
 python3 puzzle.py
 ```
+
+If you want to run against the sample input, you can execute the following command:
+
+```
+python3 puzzle.py -sample
+```
