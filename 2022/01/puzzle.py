@@ -1,23 +1,30 @@
-with open("input.txt", "r") as file:
-    input = file.read().split("\n\n")
+# --- Day 1: Calorie Counting ---
+# https://adventofcode.com/2022/day/1
 
-def puzzle1():
-    calories = []
+import sys
+sys.path.insert(0, "..")
+
+import utils
+
+def part1() -> int:
+    calories = get_calories()
+    return max(calories)
+
+def part2() -> int:
+    calories = sorted(get_calories())
+    return sum(calories[-3:])
+
+def get_calories() -> list[int]:
+    input = utils.get_input_by_group_of_lines()
+
+    calories = list[int]()
     for elf in input:
-        elf_calories = sum(map(int, elf.splitlines()))
+        elf_calories = sum(map(int, elf))
         calories.append(elf_calories)
 
-    print(f"Puzzle 1: {max(calories)}")
+    return calories
 
-def puzzle2():
-    calories = []
-    for elf in input:
-        elf_calories = sum(map(int, elf.splitlines()))
-        calories.append(elf_calories)
-    
-    sorted_calories = sorted(calories)
+utils.execute([ part1, part2 ])
 
-    print(f"Puzzle 2: {sum(sorted_calories[-3:])}")
-
-puzzle1()
-puzzle2()
+# Part 1: 69310, took 13ms
+# Part 2: 206104, took 12ms
