@@ -1,15 +1,15 @@
-with open("input.txt", "r") as f:
-    input = f.read().split("\n")
+# --- Day 3: Rucksack Reorganization ---
+# https://adventofcode.com/2022/day/3
 
-def intersect(first, second):
-    return list(set(first).intersection(second))
+import sys
+sys.path.insert(0, "..")
 
-def priority(item_type):
-    if item_type.isupper(): return ord(item_type) - 38
-    else: return ord(item_type) - 96
+import utils
 
-def puzzle1():
-    sum = 0
+def part1() -> int:
+    input = utils.get_input_by_line()
+
+    sum = int(0)
     for rucksack in input:
         compartment_length = int(len(rucksack) / 2)
         first = rucksack[:compartment_length]
@@ -17,10 +17,12 @@ def puzzle1():
         item_type = intersect(first, second)
         sum += priority(item_type[0])
 
-    print(f"Puzzle 1: {sum}")
+    return sum
 
-def puzzle2():
-    sum = 0
+def part2() -> int:
+    input = utils.get_input_by_line()
+
+    sum = int(0)
     for index in range(0, len(input), 3):
         first = input[index]
         second = input[index + 1]
@@ -28,7 +30,18 @@ def puzzle2():
         item_type = intersect(intersect(first, second), third)
         sum += priority(item_type[0])
 
-    print(f"Puzzle 2: {sum}")
+    return sum
 
-puzzle1()
-puzzle2()
+def intersect(first: str, second: str) -> list[str]:
+    return list(set(first).intersection(set(second)))
+
+def priority(item_type: str) -> int:
+    if item_type.isupper():
+        return ord(item_type) - 38
+    else:
+        return ord(item_type) - 96
+
+utils.execute([ part1, part2 ])
+
+# Part 1: 8240, took 32ms
+# Part 2: 2587, took 8ms
