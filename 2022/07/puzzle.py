@@ -1,12 +1,20 @@
-class VirtualDirectory:
-    def __init__(self, name, parent = None):
-        self.name = name
-        self.parent = parent
-        self.sub_folders = []
-        self.files = []
+# --- Day 7: No Space Left On Device ---
+# https://adventofcode.com/2022/day/7
 
-    def get_size(self):
-        total = 0
+import sys
+sys.path.insert(0, "..")
+
+import utils
+
+class VirtualDirectory:
+    def __init__(self: 'VirtualDirectory', name: str, parent: 'VirtualDirectory' = None):
+        self.name: str = name
+        self.parent: VirtualDirectory = parent
+        self.sub_folders: list[VirtualDirectory] = []
+        self.files: list[VirtualFile] = []
+
+    def get_size(self: 'VirtualDirectory') -> int:
+        total = int(0)
         for dir in self.sub_folders:
             total += dir.get_size()
         for file in self.files:
@@ -14,19 +22,34 @@ class VirtualDirectory:
         return total
 
 class VirtualFile:
-    def __init__(self, name, size):
-        self.name = name
-        self.size = size
+    def __init__(self: 'VirtualFile', name: str, size: int):
+        self.name: str = name
+        self.size: int = size
 
-with open("input.txt", "r") as f:
-    input = f.read().split("\n")
+def part1() -> int:
+    file_system = parse_filesystem()
 
-def root_directory(dir):
-    while dir.parent is not None:
-        dir = dir.parent
-    return dir
+    return total_size(file_system)
 
-def parse_filesystem():
+def part2() -> int:
+    file_system = parse_filesystem()
+
+    unused_space = 70000000 - file_system.get_size()
+    required_space = 30000000 - unused_space
+
+    directory_sizes = flatten_sizes(file_system)
+    directory_sizes.sort()
+
+    size = int(0)
+    for dir_size in directory_sizes:
+        if dir_size >= required_space:
+            size = dir_size
+            break
+
+    return size
+
+def parse_filesystem() -> VirtualDirectory:
+    input = utils.get_input_by_line()
     current_dir = VirtualDirectory("/")
 
     for line in input:
@@ -50,9 +73,14 @@ def parse_filesystem():
             current_dir.files.append(VirtualFile(name, int(size)))
 
     return root_directory(current_dir)
+
+def root_directory(dir: VirtualDirectory) -> VirtualDirectory:
+    while dir.parent is not None:
+        dir = dir.parent
+    return dir
     
-def total_size(dir):
-    total = 0
+def total_size(dir: VirtualDirectory) -> int:
+    total = int(0)
     dir_size = dir.get_size()
     if (dir_size < 100000):
         total += dir_size
@@ -60,32 +88,13 @@ def total_size(dir):
         total += total_size(folder)
     return total
 
-def flatten_sizes(dir):
-    sizes = [dir.get_size()]
+def flatten_sizes(dir: VirtualDirectory) -> list[int]:
+    sizes = [ dir.get_size() ]
     for folder in dir.sub_folders:
         sizes += flatten_sizes(folder)
     return sizes
 
-file_system = parse_filesystem()
+utils.execute([ part1, part2 ])
 
-def puzzle1():
-    size = total_size(file_system)
-    print(f"Puzzle 1: {size}")
-
-def puzzle2():
-    unused_space = 70000000 - file_system.get_size()
-    required_space = 30000000 - unused_space
-
-    directory_sizes = flatten_sizes(file_system)
-    directory_sizes.sort()
-
-    size = 0
-    for dir_size in directory_sizes:
-        if dir_size >= required_space:
-            size = dir_size
-            break
-
-    print(f"Puzzle 2: {size}")
-
-puzzle1()
-puzzle2()
+# Part 1: 1667443, took 14ms
+# Part 2: 8998590, took 14ms
