@@ -1,0 +1,6 @@
+﻿{
+  "compilerOptions": {
+    "lib": ["esnext", "dom"],
+    "target": "esnext"
+  }
+}
