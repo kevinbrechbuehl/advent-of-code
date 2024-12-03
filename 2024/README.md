@@ -26,3 +26,5 @@ It's not allowed to share the input data. Therefore, you have to copy the input 
 
 - Real input into `input.txt`
 - Sample input into `sample.txt`
+
+Some puzzles have different sample data for part 1 and 2. For this puzzles, you need to put the data into `sample1.txt` and `sample2.txt`.
