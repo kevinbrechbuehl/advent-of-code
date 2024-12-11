@@ -25,7 +25,7 @@ export const isSampleInput = (): boolean => {
   return process.argv.some((arg: string) => arg === "sample");
 };
 
-export const execute = (parts: (() => number)[]): void => {
+export const execute = (parts: (() => number | bigint)[]): void => {
   parts.forEach((part, i) => {
     const start = new Date();
 
